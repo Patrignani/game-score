@@ -13,8 +13,8 @@ type GameScoreGetAllHandlerImp struct {
 	repository repository.GameScoreRepository
 }
 
-func NewGameScoreGetAllHandler() GameScoreGetAllHandler {
-	return &GameScoreGetAllHandlerImp{repository.NewGameScoreRepository()}
+func NewGameScoreGetAllHandler(repo repository.GameScoreRepository) GameScoreGetAllHandler {
+	return &GameScoreGetAllHandlerImp{repo}
 }
 
 func (g GameScoreGetAllHandlerImp) Get() boundaries.ResultGameScore {

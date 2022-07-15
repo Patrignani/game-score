@@ -16,8 +16,8 @@ type GameScoreInsertHandlerImp struct {
 	repository repository.GameScoreRepository
 }
 
-func NewGameScoreInsertHandler() GameScoreInsertHandler {
-	return &GameScoreInsertHandlerImp{repository.NewGameScoreRepository()}
+func NewGameScoreInsertHandler(repo repository.GameScoreRepository) GameScoreInsertHandler {
+	return &GameScoreInsertHandlerImp{repo}
 }
 
 func (g GameScoreInsertHandlerImp) Insert(useCase useCase.GameScoreIntserUseCase) []string {

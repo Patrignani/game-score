@@ -12,24 +12,19 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-type GameScoreHandler interface {
-	Insert(echoContext echo.Context) error
-	Get(echoContext echo.Context) error
-}
-
 type GameScoreHandlerImp struct {
 	insertHandler services.GameScoreInsertHandler
 	getAllHandler services.GameScoreGetAllHandler
 }
 
-func NewGameScoreHandler() GameScoreHandler {
+func NewGameScoreHandler(insertHandler services.GameScoreInsertHandler, getHandler services.GameScoreGetAllHandler) ApiFactory {
 	return &GameScoreHandlerImp{
-		services.NewGameScoreInsertHandler(),
-		services.NewGameScoreGetAllHandler(),
+		insertHandler,
+		getHandler,
 	}
 }
 
-func (g *GameScoreHandlerImp) Insert(echoContext echo.Context) error {
+func (g *GameScoreHandlerImp) insert(echoContext echo.Context) error {
 	insertUseCase := useCase.GameScoreIntserUseCase{}
 
 	er := getBody(echoContext, &insertUseCase)
@@ -47,8 +42,15 @@ func (g *GameScoreHandlerImp) Insert(echoContext echo.Context) error {
 	return echoContext.JSON(http.StatusOK, "")
 }
 
-func (g *GameScoreHandlerImp) Get(echoContext echo.Context) error {
+func (g *GameScoreHandlerImp) get(echoContext echo.Context) error {
 	return echoContext.JSON(http.StatusOK, g.getAllHandler.Get())
+}
+
+func (g *GameScoreHandlerImp) Run(e *echo.Echo) {
+
+	b := e.Group("/game-score")
+	b.POST("", g.insert)
+	b.GET("", g.get)
 }
 
 func getBody[T any](echoContext echo.Context, object *T) error {

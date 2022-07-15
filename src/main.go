@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"points-game/api/handlers"
+	"points-game/ioc"
 	"time"
 
 	"github.com/labstack/echo"
@@ -19,10 +19,7 @@ func main() {
 	_, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	gamescoreHandler := handlers.NewGameScoreHandler()
+	ioc.NewIoc().GetGameScore().Run(e)
 
-	b := e.Group("/game-score")
-	b.POST("", gamescoreHandler.Insert)
-	b.GET("", gamescoreHandler.Get)
 	e.Logger.Fatal(e.Start("localhost:9098"))
 }
